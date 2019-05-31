@@ -1,4 +1,9 @@
-/**Agentia de turism: Exista turisti. Ei au anumite caracteristici (barbati/femei, grupa de
+/**     TEMA 3 POO
+        RUSE ALICE
+        GRUPA 211
+
+
+Agentia de turism: Exista turisti. Ei au anumite caracteristici (barbati/femei, grupa de
 varsta si activitatile preferate). Exista destinatii turistice (Amsterdam, Thassos, etc.). Ele
 permit o serie de activitati (plaja, mers pe munte, vizitat muzee, etc.) dintre care unele
 pot fi potrivite doar pentru anumite sexe sau grupe de varsta. Unele activitati necesita
@@ -61,16 +66,29 @@ ofstream fout("date.out");
 
 int zile=0;
 
-class Preferinta{
-string activitate;
-string opt;
-int dur;
+class Preferinta
+{
+    string activitate;
+    string opt;
+    int dur;
 public:
-Preferinta(string activitate1="", string opt1="", int dur1=0);
-~Preferinta(){};
-friend istream &operator >>(istream &i, Preferinta &preferinta);
-friend ostream &operator <<(ostream &i, Preferinta preferinta);
-Preferinta& operator =(const Preferinta &preferinta );
+    Preferinta(string activitate1="", string opt1="", int dur1=0);
+    ~Preferinta() {};
+    friend istream &operator >>(istream &i, Preferinta &preferinta);
+    friend ostream &operator <<(ostream &i, Preferinta preferinta);
+    Preferinta& operator =(const Preferinta &preferinta );
+    int get_dur()
+    {
+        return dur;
+    };
+    string get_activitate()
+    {
+        return activitate;
+    };
+    string get_opt()
+    {
+        return opt;
+    };
 };
 
 
@@ -82,9 +100,10 @@ Preferinta:: Preferinta(string activitate1, string opt1, int dur1)
 }
 
 istream &operator>>(istream &i, Preferinta &preferinta)
-{ //cout<<"hei";
+{
+    //cout<<"hei";
     getline(i, preferinta.activitate);
-   // cout<<preferinta.activitate;
+    // cout<<preferinta.activitate;
     getline(i, preferinta.opt);
     i>>preferinta.dur;
     return i;
@@ -108,7 +127,8 @@ Preferinta& Preferinta:: operator =(const Preferinta &preferinta )
 }
 
 
-class Turist{
+class Turist
+{
     string nume;
     string prenume;
     int varsta;
@@ -117,10 +137,17 @@ class Turist{
     Preferinta preferinta[10];///????????????????
 public:
     Turist(string nume1="",string prenume1="", int varsta1=0, char sex1=0, int nr_pref1=0, Preferinta preferinta1[10]=NULL );
-    ~Turist(){};
+    ~Turist() {};
     friend istream &operator >>(istream &i, Turist &turist);
     friend ostream &operator <<(ostream &i, Turist turist);
+    int get_varsta();
+    char get_sex();
+    int get_nrpref();
+    Preferinta get_pref(int i);
+    friend class Destinatie;
 };
+
+
 Turist::Turist(string nume1,string prenume1, int varsta1, char sex1, int nr_pref1, Preferinta preferinta1[10] )
 {
     nume=nume1;
@@ -128,7 +155,7 @@ Turist::Turist(string nume1,string prenume1, int varsta1, char sex1, int nr_pref
     varsta=varsta1;
     sex=sex1;
     nr_pref=nr_pref1;
-    for(int j=0;j<nr_pref;j++)
+    for(int j=0; j<nr_pref; j++)
         preferinta[j]=preferinta1[j];
 
 }
@@ -140,7 +167,7 @@ istream &operator >>(istream &i, Turist &turist)
     i>>turist.varsta;
     i>>turist.sex;
     i>>turist.nr_pref;
-    for(int k=0;k<turist.nr_pref;k++)
+    for(int k=0; k<turist.nr_pref; k++)
         i>>turist.preferinta[k];
     return i;
 }
@@ -151,15 +178,36 @@ ostream &operator <<(ostream &i, Turist turist)
     i<<turist.varsta<<" ";
     i<<turist.sex<<" ";
     //i<<turist.nr_pref
-    for(int k=0;k<turist.nr_pref;k++)
+    for(int k=0; k<turist.nr_pref; k++)
         i<<turist.preferinta[k];
     i<<"\n";
     return i;
 }
 
+int Turist::get_varsta()
+{
+    return varsta;
+}
+
+char Turist::get_sex()
+{
+    return sex;
+}
+
+int Turist::get_nrpref()
+{
+    return nr_pref;
+}
+
+Preferinta Turist::get_pref(int i)
+{
+    return preferinta[i];
+}
 
 
-class Plaja{
+
+class Plaja
+{
     string nume;
     string tip; ///pietre/nisip/scoici...
     string locatie;
@@ -185,6 +233,14 @@ public:
     void set_durata(float durata1);
     float get_distanta();
     void set_distanta(float distanta1);
+    string get_nume()
+    {
+        return nume;
+    };
+    bool get_femei()
+    {
+        return 0;
+    };
 };
 
 Plaja::Plaja(string nume1, string tip1, string locatie1, bool nudisti1, bool minori1, float durata1, float distanta1)
@@ -198,119 +254,124 @@ Plaja::Plaja(string nume1, string tip1, string locatie1, bool nudisti1, bool min
     distanta=distanta1;
 }
 istream &operator>>(istream &i, Plaja &plaja)
-     {string nume1;
-         getline(i,plaja.nume);
-         //cout<<nume1;
-        // plaja.nume=nume1;
-         cout<<plaja.nume;
-         getline(i,plaja.tip);
-         getline(i,plaja.locatie);
-         i>>plaja.nudisti;
+{
+    string nume1;
+    getline(i,plaja.nume);
+    //cout<<nume1;
+    // plaja.nume=nume1;
+    cout<<plaja.nume;
+    getline(i,plaja.tip);
+    getline(i,plaja.locatie);
+    i>>plaja.nudisti;
 
-         if(plaja.nudisti)
-            i>>plaja.minori;
-         else
-            plaja.minori=0;
+    if(plaja.nudisti)
+        i>>plaja.minori;
+    else
+        plaja.minori=0;
 
-         i>>plaja.durata;
-         i>>plaja.distanta;
+    i>>plaja.durata;
+    i>>plaja.distanta;
 
 
-          cout<<plaja.nume<<" ";
+    cout<<plaja.nume<<" ";
 
-        cout<<plaja.tip<<" ";
-        cout<<plaja.locatie<<" ";
-        if(plaja.nudisti)
-            {cout<<"Plaja nudisti ";
-            if(plaja.minori)
-                cout<<"Minorii nu au acces ";
-            }
-        cout<<plaja.durata<<" zile ";
-        cout<<plaja.distanta<<" km \n";
-         return i;
+    cout<<plaja.tip<<" ";
+    cout<<plaja.locatie<<" ";
+    if(plaja.nudisti)
+    {
+        cout<<"Plaja nudisti ";
+        if(plaja.minori)
+            cout<<"Minorii nu au acces ";
+    }
+    cout<<plaja.durata<<" zile ";
+    cout<<plaja.distanta<<" km \n";
+    return i;
 
-     }
+}
 ostream &operator<<(ostream &i, Plaja plaja)
+{
+    i<<plaja.nume<<" ";
+    cout<<plaja.nume;
+    i<<plaja.tip<<" ";
+    i<<plaja.locatie<<" ";
+    if(plaja.nudisti)
     {
-        i<<plaja.nume<<" ";
-        cout<<plaja.nume;
-        i<<plaja.tip<<" ";
-        i<<plaja.locatie<<" ";
-        if(plaja.nudisti)
-            {i<<"Plaja nudisti ";
-            if(plaja.minori)
-                i<<"Minorii nu au acces ";
-            }
-        i<<plaja.durata<<" zile ";
-        i<<plaja.distanta<<" km \n";
-        return i;
+        i<<"Plaja nudisti ";
+        if(plaja.minori)
+            i<<"Minorii nu au acces ";
     }
+    i<<plaja.durata<<" zile ";
+    i<<plaja.distanta<<" km \n";
+    return i;
+}
 
-    Plaja Plaja:: &operator=(const Plaja &plaja)
+Plaja& Plaja:: operator=(const Plaja &plaja)
 
-    {
-        nume=plaja.nume;
-        tip=plaja.tip;
-        locatie=plaja.locatie;
-        nudisti=plaja.nudisti;
-        minori=plaja.minori;
-        durata=plaja.durata;
-        distanta=plaja.distanta;
-    }
+{
+    nume=plaja.nume;
+    tip=plaja.tip;
+    locatie=plaja.locatie;
+    nudisti=plaja.nudisti;
+    minori=plaja.minori;
+    durata=plaja.durata;
+    distanta=plaja.distanta;
+    return *this;
+}
 
 string Plaja::get_tip()
 {
     return tip;
 }
-    void Plaja::set_tip(string tip1)
-    {
-        tip=tip1;
-    }
-    string Plaja::get_locatie()
-    {
-        return locatie;
-    }
-    void Plaja::set_locatie(string locatie1)
-    {
-        locatie=locatie1;
-    }
-    bool Plaja::get_nudisti()
-    {
-        return nudisti;
-    }
-    void Plaja::set_nudisti(bool nudisti1)
-    {
-        nudisti=nudisti1;
-    }
-    bool Plaja::get_minori()
-    {
-        return minori;
-    }
-    void Plaja::set_minori(bool minori1)
-    {
-        minori=minori1;
-    }
-    float Plaja::get_durata()
-    {
-        return durata;
-    }
-    void Plaja::set_durata(float durata1)
-    {
-        durata=durata1;
-    }
-    float Plaja::get_distanta()
-    {
-        return distanta;
-    }
-    void Plaja::set_distanta(float distanta1)
-    {
-        distanta=distanta1;
-    }
+void Plaja::set_tip(string tip1)
+{
+    tip=tip1;
+}
+string Plaja::get_locatie()
+{
+    return locatie;
+}
+void Plaja::set_locatie(string locatie1)
+{
+    locatie=locatie1;
+}
+bool Plaja::get_nudisti()
+{
+    return nudisti;
+}
+void Plaja::set_nudisti(bool nudisti1)
+{
+    nudisti=nudisti1;
+}
+bool Plaja::get_minori()
+{
+    return minori;
+}
+void Plaja::set_minori(bool minori1)
+{
+    minori=minori1;
+}
+float Plaja::get_durata()
+{
+    return durata;
+}
+void Plaja::set_durata(float durata1)
+{
+    durata=durata1;
+}
+float Plaja::get_distanta()
+{
+    return distanta;
+}
+void Plaja::set_distanta(float distanta1)
+{
+    distanta=distanta1;
+}
 
 
 
 
-class Munte{
+class Munte
+{
     string nume;
     string tip;
     string locatie;
@@ -321,7 +382,7 @@ class Munte{
     float distanta;
 public:
     Munte(string nume1="",string tip1="",string locatie1="", float durata1=0, int nr_opriri1=0, bool femei1=0, float distanta1=0 );
-    ~Munte(){};
+    ~Munte() {};
     friend istream &operator>>(istream &i, Munte &munte);
     friend ostream &operator<<(ostream &i, Munte munte);
     Munte &operator=(const Munte munte );
@@ -337,6 +398,10 @@ public:
     void set_durata(float durata1);
     float get_distanta();
     void set_distanta(float distanta1);
+    string get_nume()
+    {
+        return nume;
+    };
 };
 Munte::Munte(string nume1,string tip1,string locatie1, float durata1, int nr_opriri1, bool femei1, float distanta1 )
 {
@@ -367,10 +432,11 @@ istream &operator>>(istream &i, Munte &munte)
 
     }
     else
-        {   munte.nr_opriri=0;
-            munte.femei=0;
-        }
-        i>>munte.distanta;
+    {
+        munte.nr_opriri=0;
+        munte.femei=0;
+    }
+    i>>munte.distanta;
 
     return i;
 }
@@ -389,7 +455,7 @@ ostream &operator<<(ostream &i, Munte munte)
 
 }
 
-Munte Munte::&operator=(const Munte munte )
+Munte& Munte::operator=(const Munte munte )
 {
     nume=munte.nume;
     tip=munte.tip;
@@ -404,54 +470,55 @@ string Munte::get_tip()
 {
     return tip;
 }
-    void Munte::set_tip(string tip1)
-    {
-        tip=tip1;
-    }
-    string Munte::get_locatie()
-    {
-        return locatie;
-    }
-    void Munte::set_locatie( string locatie1)
-    {
-        locatie=locatie1;
-    }
-    bool Munte::get_femei()
-    {
-        return femei;
-    }
-    void Munte::set_femei(bool femei1)
-    {
-        femei=femei1;
-    }
-    int Munte::get_nr_opriri()
-    {
-        return nr_opriri;
-    }
-    void Munte::set_nr_opriri(int nr_opriri1)
-    {
-        nr_opriri=nr_opriri1;
-    }
+void Munte::set_tip(string tip1)
+{
+    tip=tip1;
+}
+string Munte::get_locatie()
+{
+    return locatie;
+}
+void Munte::set_locatie( string locatie1)
+{
+    locatie=locatie1;
+}
+bool Munte::get_femei()
+{
+    return femei;
+}
+void Munte::set_femei(bool femei1)
+{
+    femei=femei1;
+}
+int Munte::get_nr_opriri()
+{
+    return nr_opriri;
+}
+void Munte::set_nr_opriri(int nr_opriri1)
+{
+    nr_opriri=nr_opriri1;
+}
 
-    float Munte::get_durata()
-    {
-        return durata;
-    }
-    void Munte::set_durata(float durata1)
-    {
-        durata=durata1;
-    }
-    float Munte::get_distanta()
-    {
-        return distanta;
-    }
-    void Munte::set_distanta(float distanta1)
-    {
-        distanta=distanta1;
-    }
+float Munte::get_durata()
+{
+    return durata;
+}
+void Munte::set_durata(float durata1)
+{
+    durata=durata1;
+}
+float Munte::get_distanta()
+{
+    return distanta;
+}
+void Munte::set_distanta(float distanta1)
+{
+    distanta=distanta1;
+}
 
 
-class Muzeu{
+class Muzeu
+{
     string nume;
     string tip;///arta, stiinte, istorie
     string locatie;
@@ -460,7 +527,7 @@ class Muzeu{
     float distanta;
 public:
     Muzeu(string nume1="", string tip1="",string locatie1="", bool femei1=0, float durata1=0, float distanta1=0);
-    ~Muzeu(){};
+    ~Muzeu() {};
     friend istream &operator>>(istream &i, Muzeu &muzeu);
     friend ostream &operator<<(ostream &i, Muzeu muzeu);
     Muzeu &operator=(const Muzeu &muzeu);
@@ -474,16 +541,21 @@ public:
     void set_durata(float durata1);
     float get_distanta();
     void set_distanta(float distanta1);
+    string get_nume()
+    {
+        return nume;
+    };
 
 };
 
-Muzeu::Muzeu(string nume1, string tip1,string locatie1, bool femei1, float durata1, float distanta1){
-nume=nume1;
-tip=tip1;
-locatie=locatie1;
-femei=femei1;
-durata=durata1;
-distanta=distanta1;
+Muzeu::Muzeu(string nume1, string tip1,string locatie1, bool femei1, float durata1, float distanta1)
+{
+    nume=nume1;
+    tip=tip1;
+    locatie=locatie1;
+    femei=femei1;
+    durata=durata1;
+    distanta=distanta1;
 }
 istream &operator>>(istream &i, Muzeu &muzeu)
 {
@@ -492,7 +564,7 @@ istream &operator>>(istream &i, Muzeu &muzeu)
     getline(i,muzeu.tip);
     getline(i,muzeu.locatie);
     if(muzeu.tip=="stiinte")
-    i>>muzeu.femei;
+        i>>muzeu.femei;
     else
         muzeu.femei=0;
     i>>muzeu.durata;
@@ -516,7 +588,7 @@ ostream &operator<<(ostream &i, Muzeu muzeu)
     return i;
 }
 
-Muzeu Muzeu::&operator=(const Muzeu &muzeu)
+Muzeu& Muzeu::operator=(const Muzeu &muzeu)
 {
     nume=muzeu.nume;
     tip=muzeu.tip;
@@ -531,80 +603,108 @@ string Muzeu::get_tip()
     return tip;
 
 }
-    void Muzeu::set_tip( string tip1)
-    {
-        tip=tip1;
-    }
-    string Muzeu::get_locatie()
-    {
-        return locatie;
-    }
-    void Muzeu::set_locatie( string locatie1)
-    {
-        locatie=locatie1;
-    }
-    bool Muzeu::get_femei()
-    {
-        return femei;
-    }
-    void Muzeu::set_femei(bool femei1)
-    {
-        femei=femei1;
-    }
-    float Muzeu::get_durata()
-    {
-        return durata;
-    }
-    void Muzeu::set_durata(float durata1)
-    {
-        durata=durata1;
-    }
-    float Muzeu::get_distanta()
-    {
-        return distanta;
-    }
-    void Muzeu::set_distanta(float distanta1)
-    {
-        distanta=distanta1;
-    }
+void Muzeu::set_tip( string tip1)
+{
+    tip=tip1;
+}
+string Muzeu::get_locatie()
+{
+    return locatie;
+}
+void Muzeu::set_locatie( string locatie1)
+{
+    locatie=locatie1;
+}
+bool Muzeu::get_femei()
+{
+    return femei;
+}
+void Muzeu::set_femei(bool femei1)
+{
+    femei=femei1;
+}
+float Muzeu::get_durata()
+{
+    return durata;
+}
+void Muzeu::set_durata(float durata1)
+{
+    durata=durata1;
+}
+float Muzeu::get_distanta()
+{
+    return distanta;
+}
+void Muzeu::set_distanta(float distanta1)
+{
+    distanta=distanta1;
+}
 
 
-class Program : public Preferinta{
- string nume;
- string descriere;
+class Program : public Preferinta
+{
+    string nume;
+    string descriere;
+    int dur;
 public:
 
-Program(string nume1="", string descriere1=""):Preferinta()
-{
-    nume=nume1;
-    descriere=descriere1;
-}
-~Program(){};
-friend istream &operator>>(istream &i, Program &program);
-friend ostream &operator<<(ostream &i, Program program);
-
-
+    Program(string nume1="", string descriere1="", int dur1=0):Preferinta()
+    {
+        nume=nume1;
+        descriere=descriere1;
+        dur=dur1;
+    }
+    ~Program() {};
+    friend istream &operator>>(istream &i, Program &program);
+    friend ostream &operator<<(ostream &i, Program program);
+    int get_dur()
+    {
+        return dur;
+    };
+    void set_dur(int i)
+    {
+        dur=i;
+    };
+    string get_nume()
+    {
+        return nume;
+    };
+    string get_descriere()
+    {
+        return descriere;
+    };
+    void set_nume(string n)
+    {
+        nume=n;
+    };
+    void set_descriere(string d)
+    {
+        descriere=d;
+    };
 };
 istream &operator>>(istream &i, Program &program)
 {
     getline(i, program.nume);
 
     i>>program;
+    return i;
 }
 ostream &operator<<(ostream &i, Program program)
 {
     i<<program.nume<<" ";
     i<<program<<" ";
     i<<"\n";
+    return i;
 }
 
-class Destinatie{
+class Destinatie
+{
     string nume_dest;
     bool inchiriere_vehicul;
     string transport;///????? aici sau la fiecare? merg toti cu acelasi mijloc de transport??
-     int nr_plaje;
-     int nr_munti;
-     int nr_muzee;
+    int nr_plaje;
+    int nr_munti;
+    int nr_muzee;
     Plaja plaja[10];
     Munte munte[10];
     Muzeu muzeu[10];
@@ -613,26 +713,68 @@ class Destinatie{
 public:
     ///metode
     Destinatie(string nume_dest1="", bool inchiriere_vehicul1=0, string transport1="", int nr_plaje1=0, int nr_munti1=0, int nr_muzee1=0,Plaja plaja1[10]=NULL, Munte munte1[10]=NULL, Muzeu muzeu1[10]=NULL);
-    ~Destinatie(){};
+    ~Destinatie() {};
     friend istream &operator>>(istream &i, Destinatie &destinatie);
     friend ostream &operator<<(ostream &i, Destinatie destinatie);
+    friend class Turist;
+    bool get_vehicul()
+    {
+        return inchiriere_vehicul;
+    };
+    int get_nrplaje()
+    {
+        return nr_plaje;
+    };
+    int get_nrmuzee()
+    {
+        return nr_muzee;
+    };
+    int get_nrmunti()
+    {
+        return nr_munti;
+    };
+    int get_pr()
+    {
+        return pr;
+    };
+    void set_pr(int i)
+    {
+        pr=1;
+    };
+    Plaja get_plaja(int i)
+    {
+        return plaja[i];
+    };
+    Munte get_munte(int i)
+    {
+        return munte[i];
+    };
+    Muzeu get_muzeu(int i)
+    {
+        return muzeu[i];
+    };
+    void set_program(int i, int val) {};
+    Program get_program(int i)
+    {
+        return program[i];
+    }
 };
 
 Destinatie::Destinatie(string nume_dest1, bool inchiriere_vehicul1, string transport1, int nr_plaje1, int nr_munti1, int nr_muzee1,Plaja plaja1[10], Munte munte1[10], Muzeu muzeu1[10])
-               {
-                   nume_dest=nume_dest1;
-                   inchiriere_vehicul=inchiriere_vehicul1;
-                   transport=transport1;
-                   nr_plaje=nr_plaje1;
-                   nr_munti=nr_munti1;
-                   nr_muzee=nr_muzee1;
-                   for(int k=0;k<nr_plaje;k++)
-                    plaja[k]=plaja1[k];
-                   for(int k=0;k<nr_plaje;k++)
-                    munte[k]=munte1[k];
-                    for(int k=0;k<nr_muzee;k++)
-                    muzeu[k]=muzeu1[k];
-               }
+{
+    nume_dest=nume_dest1;
+    inchiriere_vehicul=inchiriere_vehicul1;
+    transport=transport1;
+    nr_plaje=nr_plaje1;
+    nr_munti=nr_munti1;
+    nr_muzee=nr_muzee1;
+    for(int k=0; k<nr_plaje; k++)
+        plaja[k]=plaja1[k];
+    for(int k=0; k<nr_plaje; k++)
+        munte[k]=munte1[k];
+    for(int k=0; k<nr_muzee; k++)
+        muzeu[k]=muzeu1[k];
+}
 istream &operator>>(istream &i, Destinatie &destinatie)
 {
     getline(i, destinatie.nume_dest);
@@ -641,13 +783,13 @@ istream &operator>>(istream &i, Destinatie &destinatie)
     i>>destinatie.nr_plaje;
     i>>destinatie.nr_munti;
     i>>destinatie.nr_muzee;
-    for(int k=0;k<destinatie.nr_plaje;k++)
+    for(int k=0; k<destinatie.nr_plaje; k++)
         i>>destinatie.plaja[k];
-    for(int k=0;k<destinatie.nr_plaje;k++)
+    for(int k=0; k<destinatie.nr_plaje; k++)
         i>>destinatie.munte[k];
-    for(int k=0;k<destinatie.nr_muzee;k++)
+    for(int k=0; k<destinatie.nr_muzee; k++)
         i>>destinatie.muzeu[k];
-        return i;
+    return i;
 
 }
 ostream &operator<<(ostream &i, Destinatie destinatie)
@@ -658,47 +800,62 @@ ostream &operator<<(ostream &i, Destinatie destinatie)
     i<<destinatie.nr_plaje<<" ";
     i<<destinatie.nr_munti<<" ";
     i<<destinatie.nr_muzee<<" ";
-    for(int k=0;k<nr_plaje;k++)
-        i<<plaja[k]<<" ";
-    for(int k=0;k<nr_plaje;k++)
-        i<<munte[k]<<" ";
-    for(int k=0;k<nr_muee;k++)
-        i<<muzeu[k]<<" ";
-        i<<"\n";
-        return i;
+    for(int k=0; k<destinatie.nr_plaje; k++)
+        i<<destinatie.plaja[k]<<" ";
+    for(int k=0; k<destinatie.nr_munti; k++)
+        i<<destinatie.munte[k]<<" ";
+    for(int k=0; k<destinatie.nr_muzee; k++)
+        i<<destinatie.muzeu[k]<<" ";
+    i<<"\n";
+    return i;
 }
 ///verificam dca e potrivit pt femei
-template <class T> bool verif_fem(T activ, nr_turisti)
-{ int ok=0;
-    for(int i=0;i<nr_turisti;i++)
+template <class T> bool verif_fem(T activ,int nr_turisti, Turist turist[20])///---------------------------------
+{
+    int ok=0;
+    for(int i=0; i<nr_turisti; i++)
     {
-        if(turist[i].get_sex==f)
+        if(turist[i].get_sex()=='f')
             ok=1;
     }
-    if (ok==1 && activ.get_femei==1)
+    if (ok==1 && activ.get_femei()==1)
         return 0;
     else
         return 1;
 }
 
 
- bool verif_minori(Plaja activ,int nr_turisti)
-{ int ok=0;
-    for(int i=0;i<nr_turisti;i++)
+bool verif_minori(Plaja activ,int nr_turisti, Turist turist[20])
+{
+    int ok=0;
+    for(int i=0; i<nr_turisti; i++)
     {
-        if(turist[i].get_varsta<18)
+        if(turist[i].get_varsta()<18)
             ok=1;
     }
-    if (ok==1 && activ.get_minori==1)
+    if (ok==1 && activ.get_minori()==1)
         return 0;
     else
         return 1;
 }
 
+bool verif_traseu(Munte munti,int nr_turisti, Turist turist[20])
+{
+    int ok=0;
+    for(int i=0; i<nr_turisti; i++)
+    {
+        if(turist[i].get_varsta()<16 ||turist[i].get_varsta()>90 )
+            ok=1;
+    }
+    if (ok==1 && munti.get_tip()=="greu")
+        return 0;
+    else
+        return 1;
+}
 
 template <class T> bool verif_transport(T activ, Destinatie dest)
 {
-    if(activ.distanta>2 && dest.inchiriere_vehicul=0)
+    if(activ.get_distanta()>2 && dest.get_vehicul()==0)
         return 0;
     else return 1;
 }
@@ -706,27 +863,32 @@ template <class T> bool verif_transport(T activ, Destinatie dest)
 int maxim(int v[20],int n)
 {
     int maxx=0;
-    for(int i=0;i<n;i++)
+    for(int i=0; i<n; i++)
     {
         if(maxx<v[i])
             maxx=v[i];
     }
-       return maxx;
+    return maxx;
 }
 
 
 
 
- int durata_minima(  string activ,Turist turisti[20], nr_turisti)
-{   int i=0
+int durata_minima(  string activ,Turist turist[20],int  nr_turisti)
+{
+    int i=0;
+    Preferinta p;
     int durata[20];
-    for(int j=0;j<nr_turisti;j++)
-  {
-      for(int k=0;k<turist[j].nr_pref)
-          {if( turist[j].preferinta[k].activitate==activ)
-            durata[i]=turist[j].preferinta[k].dur;
+    for(int j=0; j<nr_turisti; j++)
+    {
+        for(int k=0; k<turist[j].get_nrpref(); k++)
+
+        {
+            //p=turist[j].get_pref();///------------------------------- get, nu e metoda
+            if( turist[j].get_pref(k).get_activitate()==activ)
+                durata[i]=turist[j].get_pref(k).get_dur();
             i++;
-          }
+        }
     }
     return maxim(durata, i);
 }
@@ -775,127 +937,135 @@ b
 
 Destinatie cautare_destinatie(int nr_turisti, Turist turist[20],int  nr_destinatii, Destinatie rezultat[10], Destinatie destinatie[20])
 {
-  int p_plaja=0, p_munte=0, p_muzeu=0, zile_plaja=0, zile_munte=0, zile_muzeu=0, zile_totale=0, rez=0, z;
+    int p_plaja=0, p_munte=0, p_muzeu=0, zile_plaja=0, zile_munte=0, zile_muzeu=0, zile_totale=0, rez=0, z;
 
-  string optiune;
-  for(int j=0;j<nr_turisti;j++)
-  {
-      for(int k=0;k<turist[j].nr_pref)
-          {optiune=turist[j].preferinta[k].opt;
-           act=turist[j].preferinta[k].activitate ;
-                for(int i=0;i<nr_turisti;i++)
+    string optiune, act;
+    for(int j=0; j<nr_turisti; j++)
+    {
+        for(int k=0; k<turist[j].get_nrpref(); k++)
+        {
+            optiune=turist[j].get_pref(k).get_opt();
+            act=turist[j].get_pref(k).get_activitate() ;
+            for(int i=0; i<nr_turisti; i++)
+            {
+                for(int m=0; m<turist[i].get_nrpref(); m++)
                 {
-                    for(int m=0;m<turist[i].nr_pref;m++)
-                    {
-                        if(act==turist[i].preferinta[m].activitate && optiune!=turist[i].preferinta[m].opt && i!=j)
-                            if(act=="plaja")
+                    if(act==turist[i].get_pref(m).get_activitate() && optiune!=turist[i].get_pref(m).get_opt() && i!=j)
+                        if(act=="plaja")
                             p_plaja=-1;
-                            if(act="munte")
-                            p_munte=-1;
-                            if(act="muzeu")
-                            p_muzeu=-1;
+                    if(act=="munte")
+                        p_munte=-1;
+                    if(act=="muzeu")
+                        p_muzeu=-1;
+                }
+            }
+        }
+    }
+
+    for(int j=0; j<nr_turisti; j++)
+    {
+        for(int k=0; k<turist[j].get_nrpref(); k++)
+        {
+            act=turist[j].get_pref(k).get_activitate() ;
+            if(act=="plaja")
+                p_plaja=1;
+            if(act=="munte")
+                p_munte=1;
+            if(act=="muzeu")
+                p_muzeu=1;
+        }
+    }
+    if(p_plaja==1)
+    {
+        zile_plaja=durata_minima("plaja", turist, nr_turisti);
+
+        for(int w=0; w<nr_destinatii; w++)
+        {
+            if(destinatie[w].get_nrplaje()!=0)
+            {
+                for(int q=0; q<destinatie[w].get_nrplaje(); q++) ///verificam chestii
+                {
+                    z=zile_plaja/destinatie[w].get_plaja(q).get_durata();///de cate ori tb sa faca activitatea
+                    if(verif_transport(destinatie[w].get_plaja(q), destinatie[w]) && verif_fem(destinatie[w].get_plaja(q),nr_turisti, turist) && verif_minori(destinatie[w].get_plaja(q),nr_turisti, turist) && zile_totale+z<=14)
+                        ///
+                    {
+                        destinatie[w].get_program(destinatie[w].get_pr()).set_nume(destinatie[w].get_plaja(q).get_nume());
+                        destinatie[w].get_program(destinatie[w].get_pr()).set_descriere(destinatie[w].get_plaja(q).get_tip());
+                        destinatie[w].get_program(destinatie[w].get_pr()).set_dur(destinatie[w].get_plaja(q).get_durata());
+                        destinatie[w].set_pr(destinatie[w].get_pr()+1);
+                        rezultat[rez]=destinatie[w];
+                        rez++;
+
+                    }
+
+
+                }
+            }
+        }
+
+
+
+    }
+    if(p_munte==1)
+    {
+        zile_munte=durata_minima("munte", turist, nr_turisti);
+        for(int w=0; w<nr_destinatii; w++)
+        {
+            if(destinatie[w].get_nrmunti()!=0)
+            {
+                for(int q=0; q<destinatie[w].get_nrmunti(); q++) ///verificam chestii
+                {
+
+                    z=zile_munte/destinatie[w].get_munte(q).get_durata();///de cate ori tb sa faca activitatea
+                    if(verif_transport(destinatie[w].get_munte(q), destinatie[w]) && verif_fem(destinatie[w].get_munte(q),nr_turisti, turist) &&verif_traseu(destinatie[w].get_munte(q),nr_turisti, turist) && zile_totale+z<=14)
+                    {
+                        destinatie[w].get_program(destinatie[w].get_pr()).set_nume(destinatie[w].get_munte(q).get_nume());
+                        destinatie[w].get_program(destinatie[w].get_pr()).set_descriere(destinatie[w].get_munte(q).get_tip());
+                        destinatie[w].get_program(destinatie[w].get_pr()).set_dur(destinatie[w].get_munte(q).get_durata());
+                        destinatie[w].set_pr(destinatie[w].get_pr()+1);
+
+                        rezultat[rez]=destinatie[w];
+                        rez++;
                     }
                 }
-      }
-  }
-
-for(int j=0;j<nr_turisti;j++)
-{
-      for(int k=0;k<turist[j].nr_pref)
-          {
-           act=turist[j].preferinta[k].activitate ;
-            if(act=="plaja")
-            p_plaja=1;
-            if(act="munte")
-            p_munte=1;
-            if(act="muzeu")
-            p_muzeu=1;
-          }
-}
-if(p_plaja==1)
-{
-    zile_plaja=durata_minima(plaja, turisti, nr_turisti);
-
-    for(int w=0;w<nr_destinatii;w++)
-    {
-        if(destinatie[w].nr_plaje!=0)
-            {
-                for(int q=0;q<nr_plaje;q++)///verificam chestii
-                   {
-                      z=zile_plaja/destinatie[w].plaja[q].dur///de cate ori tb sa faca activitatea
-                    if(verif_transport(destinatie[w].plaja[q], destinatie[w]) && verif_fem(destinatie[w].plaja[q],nr_turisti) && verif_minori(destinatie[w].plaja[q],nr_turisti) && zile_totale+z<=14)
-                    ///
-                    {
-                     destinatia[w].program[destinatie[w].pr].nume=destinatie[w].plaja[q].nume;
-              destinatia[w].program[destinatie[w].pr].tip=destinatie[w].plaja[q].tip;
-              destinatia[w].program[destinatie[w].pr].dur=destinatie[w].plaja[q].dur;
-              destinatie[w].pr++;
-            rezultat[rez]=destinatie[w];
-            rez++;
-
-                    }
-
-
-                   }
             }
+
+        }
+
     }
 
 
 
-}
-if(p_munte==1)
- {
-     zile_munte=durata_minima(munte, turisti, nr_turisti);
-     for(int w=0;w<nr_destinatii;w++)
+
+    if(p_muzeu==1)
+        zile_muzeu=durata_minima("muzeu", turist, nr_turisti);
+    for(int w=0; w<nr_destinatii; w++)
     {
-        if(destinatie[w].nr_munti!=0)
+        if(destinatie[w].get_nrmuzee()!=0)
+        {
+            for(int q=0; q<destinatie[w].get_nrmuzee(); q++) ///verificam chestii
             {
-                for(int q=0;q<destinatie[w].nr_munti;q++)///verificam chestii
-                     z=zile_munte/destinatie[w].munte[q].dur///de cate ori tb sa faca activitatea
-                    if(verif_transport(destinatie[w].munte[q], destinatie[w]) && verif_fem(destinatie[w].munte[q],nr_turisti) &&verif_traseu(destinatie[w].munte[q],nr_turisti) && zile_totale+z<=14)
+
+                z=zile_muzeu/destinatie[w].get_muzeu(q).get_durata();///de cate ori tb sa faca activitatea
+                {
+                    if(verif_transport(destinatie[w].get_muzeu(q), destinatie[w]) && verif_fem(destinatie[w].get_muzeu(q),nr_turisti, turist)  && zile_totale+z<=14)
                     {
-                       destinatia[w].program[destinatie[w].pr].nume=destinatie[w].munte[q].nume;
-                          destinatia[w].program[destinatie[w].pr].tip=destinatie[w].munte[q].tip;
-                          destinatia[w].program[destinatie[w].pr].dur=destinatie[w].munte[q].dur;
-                          destinatie[w].pr++;
+                        destinatie[w].get_program(destinatie[w].get_pr()).set_nume(destinatie[w].get_muzeu(q).get_nume());
+                        destinatie[w].get_program(destinatie[w].get_pr()).set_descriere(destinatie[w].get_muzeu(q).get_tip());
+                        destinatie[w].get_program(destinatie[w].get_pr()).set_dur(destinatie[w].get_muzeu(q).get_durata());
+                        destinatie[w].set_pr(destinatie[w].get_pr()+1);
 
                         rezultat[rez]=destinatie[w];
                         rez++;
                     }
-
+                }
             }
 
-    }
-
- }
-
-
-
-
-if(p_muzeu==1)
- zile_muzeu=durata_minima("muzeu", turisti, nr_turisti);
-for(int w=0;w<nr_destinatii;w++)
-    {
-        if(destinatie[w].nr_muzee!=0)
-            {
-                for(int q=0;q<destinatie[w].nr_muzee;q++)///verificam chestii
-                     z=zile_muzeu/destinatie[w].muzeu[q].dur///de cate ori tb sa faca activitatea
-                    if(verif_transport(destinatie[w].muzeu[q], destinatie[w]) && verif_fem(destinatie[w].muzeu[q],nr_turisti) &&verif_traseu(destinatie[w].muzeu[q],nr_turisti) && zile_totale+z<=14)
-                    {
-                       destinatia[w].program[destinatie[w].pr].nume=destinatie[w].muzeu[q].nume;
-                          destinatia[w].program[destinatie[w].pr].tip=destinatie[w].muzeu[q].tip;
-                          destinatia[w].program[destinatie[w].pr].dur=destinatie[w].muzeu[q].dur;
-                          destinatie[w].pr++;
-
-                        rezultat[rez]=destinatie[w];
-                        rez++;
-                    }
-
-            }
+        }
 
     }
-//return *rezultat;
- }
+    return *rezultat;
+}
 
 
 
@@ -909,27 +1079,28 @@ int main()
     int nr_turisti, nr_destinatii;
     Destinatie rezultat[10], destinatie[20];
     Preferinta pref[2];
-    for(int k=0;k<2;k++)
+    Turist turist[20];
+    for(int k=0; k<2; k++)
         fin>>pref[k];
-    for(int k=0;k<2;k++)
+    for(int k=0; k<2; k++)
         cout<<pref[k];
 
-/**
-    Turist turist[2];
-    fin>>turist[0];
-    cout<<turist[0];
-    Turist turist[2];
-    for(int j=0;j<2;j++)
-        f>>turist[j];
-    for(int j=0;j<2;j++)
-        cout<<turist[j];
+    /**
+        Turist turist[2];
+        fin>>turist[0];
+        cout<<turist[0];
+        Turist turist[2];
+        for(int j=0;j<2;j++)
+            f>>turist[j];
+        for(int j=0;j<2;j++)
+            cout<<turist[j];
 
 
-//Muzeu plj;
-//fin>>plj;
-//cout<<plj;
-///string str;
-///getline(fin, str);
-///cout<<str;
-*/
+    //Muzeu plj;
+    //fin>>plj;
+    //cout<<plj;
+    ///string str;
+    ///getline(fin, str);
+    ///cout<<str;
+    */
 }
